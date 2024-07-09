@@ -174,6 +174,18 @@ final class EndToEndTests: XCTestCase {
             expectsFailure: false
         )
     }
+    
+    func testSimpleCommand() async throws {
+        try await runTest(
+            perform: { server, client in
+                let stdout = try await client.executeCommand("echo 'Hello, World!'")
+                let responseText = String(buffer: stdout)
+                XCTAssertEqual(responseText, "Hello, World!\n")
+            },
+            matchingError: { _ in false },
+            expectsFailure: false
+        )
+    }
 
     func testExecExitCode() async throws {
         final class Exec: ExecDelegate {

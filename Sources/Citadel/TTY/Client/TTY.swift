@@ -168,7 +168,12 @@ extension SSHClient {
             case .stderr(let stderr):
                 streamContinuation.yield(.stderr(stderr))
             case .eof(let error):
-                streamContinuation.finish(throwing: error)
+                if let error {
+                    streamContinuation.finish(throwing: error)
+                }
+                else {
+                    streamContinuation.finish()
+                }
             case .channelSuccess:
                 if inShell, !hasReceivedChannelSuccess {
                     let commandData = SSHChannelData(type: .channel,
@@ -178,7 +183,7 @@ extension SSHClient {
                 }
             case .exit(let status):
                 if status == 0 {
-                    streamContinuation.finish()
+                    // NO-OP
                 } else {
                     streamContinuation.finish(throwing: CommandFailed(exitCode: status))
                 }
