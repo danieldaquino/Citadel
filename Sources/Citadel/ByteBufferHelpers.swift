@@ -27,7 +27,7 @@ extension ByteBuffer {
         }
         
         if let permissions = attributes.permissions {
-            writeInteger(permissions)
+            writeInteger(permissions.rawValue)
         }
         
         if let accessModificationTime = attributes.accessModificationTime {
@@ -76,7 +76,7 @@ extension ByteBuffer {
                 return nil
             }
             
-            attributes.permissions = permissions
+            attributes.permissions = SFTPFileAttributes.Permissions(rawValue: permissions)
         }
         
         if flags.contains(.acmodtime) {
