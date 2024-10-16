@@ -283,6 +283,22 @@ public final class SFTPClient {
 
         self.logger.debug("SFTP renamed file at \(oldPath) to \(newPath)")
     }
+    
+    /// Set file attributes to a specific path
+    public func setAttributes(
+        at filePath: String,
+        attributes: SFTPFileAttributes
+    ) async throws {
+        self.logger.info("SFTP requesting attributes change at '\(filePath)'")
+        
+        let _ = try await sendRequest(.setstat(.init(
+            requestId: allocateRequestId(),
+            path: filePath,
+            attributes: attributes
+        )))
+
+        self.logger.debug("SFTP changed attributes at \(filePath)")
+    }
 
 }
 
